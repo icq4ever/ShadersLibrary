@@ -113,7 +113,9 @@ void LightShaderManager::setupLights(){
     
     shader.setUniform1i("lightsNumber", lights.size());
     
-    normalMatrix = ofMatrix4x4::getTransposedOf(cam->getModelViewMatrix().getInverse());
+    // normalMatrix = ofMatrix4x4::getTransposedOf(cam->getModelViewMatrix().getInverse());
+    glm::mat4 mvMatrix = cam->getModelViewMatrix();
+    auto normalMatrix = glm::transpose(glm::inverse(mvMatrix));
     shader.setUniformMatrix4f("normalMatrix", normalMatrix);
     
     GLuint lights_ubo;
@@ -201,7 +203,9 @@ vector<string> LightShaderManager::generateLightPropsNames() {
 void LightShaderManager::setLightPosition(size_t lightIndex, vector<unsigned char> & buffer, const GLint * offsets){
     
     int offset = offsets[0 + lightIndex * LIGHT_PROPS_NUMBER];
-    ofVec3f eyeSpaceLightPos = lights[lightIndex]->getGlobalPosition() * cam->getModelViewMatrix();
+    glm::vec4 v(lights[lightIndex]->getGlobalPosition(), 0);
+    ofVec3f eyeSpaceLightPos = v * cam->getModelViewMatrix();
+
     
     if (lights[lightIndex]->getIsDirectional()) {
         ofVec4f dir;
