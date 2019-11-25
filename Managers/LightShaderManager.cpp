@@ -108,6 +108,7 @@ bool LightShaderManager::usingLight(ofLight * p_light){
     }
     
 }
+
 //--------------------------------------------------------------
 void LightShaderManager::setupLights(){
     
@@ -134,6 +135,7 @@ void LightShaderManager::setupLights(){
     
     vector<string> names = generateLightPropsNames();
     vector<const GLchar *> glnames;
+	
     
     for (vector<string>::iterator str = names.begin(); str != names.end(); ++str)
     {
@@ -141,14 +143,14 @@ void LightShaderManager::setupLights(){
     }
     
     const GLchar **glnames_ptr = &glnames[0];
-    GLuint indices[glnames.size()];
-    
-    glGetUniformIndices(shader.getProgram(), glnames.size(), glnames_ptr, indices);
+    //GLuint indices[glnames.size()];
+	vector<GLuint> indices(glnames.size());
+	glGetUniformIndices(shader.getProgram(), glnames.size(), glnames_ptr, &indices[0]);
     
     vector<GLint> lightUniformOffsets(glnames.size());
     
     glGetActiveUniformsiv(shader.getProgram(), lightUniformOffsets.size(),
-                          indices, GL_UNIFORM_OFFSET, &lightUniformOffsets[0]);
+                          &indices[0], GL_UNIFORM_OFFSET, &lightUniformOffsets[0]);
     
     GLint *offsets = &lightUniformOffsets[0];
     const unsigned int uboSize (uniformBlockSize);
