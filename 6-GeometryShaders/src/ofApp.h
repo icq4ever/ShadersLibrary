@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "GeometryShaderManager.h"
+#include "Managers/GeometryShaderManager.h"
 #include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
